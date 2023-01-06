@@ -2,14 +2,9 @@ package com.api.ComprometimentoFinanceiro.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.springframework.validation.annotation.Validated;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 
 @Entity
 @Table(name="TB_PESSOA_JURIDICA")
@@ -18,6 +13,7 @@ public class PessoaJuridicaModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequencia_pj")
+    @Getter
     private int id;
 
     @Getter
@@ -40,14 +36,14 @@ public class PessoaJuridicaModel {
 
     @Setter
     @Getter
-    @ManyToMany(targetEntity = PessoaFisicaModel.class, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = PessoaFisicaModel.class)
     @JoinColumn(name="pf_fk", referencedColumnName = "id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<PessoaFisicaModel> pfList = new ArrayList<>();
 
     @Setter
     @Getter
-    @ManyToMany(targetEntity = PessoaJuridicaModel.class, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = PessoaJuridicaModel.class)
     @JoinColumn(name="pj_fk", referencedColumnName = "id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<PessoaJuridicaModel> pjList = new ArrayList<>();

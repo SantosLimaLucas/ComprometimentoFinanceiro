@@ -15,6 +15,7 @@ public class EstruturaSocietariaModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequencia_es")
+    @Getter
     private int id;
 
     @Getter

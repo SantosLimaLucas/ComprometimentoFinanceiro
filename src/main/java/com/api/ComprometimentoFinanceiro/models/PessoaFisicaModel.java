@@ -15,6 +15,7 @@ public class PessoaFisicaModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequencia_pf")
+    @Getter
     private int id;
 
     @Getter

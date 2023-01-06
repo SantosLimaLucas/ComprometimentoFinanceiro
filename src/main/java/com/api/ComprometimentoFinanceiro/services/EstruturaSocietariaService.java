@@ -30,24 +30,27 @@ public class EstruturaSocietariaService {
     }
 
     @Transactional
-    public EstruturaSocietariaModel save(EstruturaSocietariaModel estruturaSocietariaModel) throws Exception{
+    public EstruturaSocietariaModel salvarEstruturaSocietaria(EstruturaSocietariaModel estruturaSocietariaModel) throws Exception{
 
         if((estruturaSocietariaModel.getPessoasJuridicasList() == null) && (estruturaSocietariaModel.getPessoasFisicasList() == null) ){
             throw new Exception("Não pode haver ambas as listas de Pessoa Fisica e Pessoa Juridica nulas");
         }
         return estruturaSocietariaRepository.save(estruturaSocietariaModel);
     }
-
+    /**
+     * Como apenas é enviado os ids das pessoas fisicas e pessoas juridicas na requisição, esse método é
+     * necessário para preencher a lista de objetos PessoaFisica e PessoaJuridica de acordo com os ids passados.
+     */
     public void setListaPessoasFisicaEJuridica(EstruturaSocietariaModel estruturaSocietariaModel){
         if(estruturaSocietariaModel.getPessoasFisicasList() != null){
             for(Integer i : estruturaSocietariaModel.getPessoasFisicasList()){
-                PessoaFisicaModel pf = pessoaFisicaRepository.getOne(i);
+                PessoaFisicaModel pf = pessoaFisicaRepository.findById(i).get();
                 estruturaSocietariaModel.addPessoaFisica(pf);
             }
         }
         if(estruturaSocietariaModel.getPessoasJuridicasList() != null){
             for(Integer i : estruturaSocietariaModel.getPessoasJuridicasList()){
-                PessoaJuridicaModel pj = pessoaJuridicaRepository.getOne(i);
+                PessoaJuridicaModel pj = pessoaJuridicaRepository.findById(i).get();
                 estruturaSocietariaModel.addPessoaJuridica(pj);
             }
         }
@@ -55,7 +58,6 @@ public class EstruturaSocietariaService {
 
     public Double comprometimentoFinanceiro(EstruturaSocietariaModel estruturaSocietariaModel) {
         Double comprometimentoFinanceiro = 0d;
-        //comprometimentoFinanceiro += calcularBensPF(estruturaSocietariaModel.getPfList());
         adicionarPF(estruturaSocietariaModel.getPfList());
         adicionarPJ(estruturaSocietariaModel.getPjList());
 
@@ -114,7 +116,8 @@ public class EstruturaSocietariaService {
         return estruturaSocietariaRepository.findById(id);
     }
 
-    public EstruturaSocietariaModel getOne(int id) {
-        return this.estruturaSocietariaRepository.getOne(id);
+    public List<EstruturaSocietariaModel> findAll() {
+        return estruturaSocietariaRepository.findAll();
     }
+
 }

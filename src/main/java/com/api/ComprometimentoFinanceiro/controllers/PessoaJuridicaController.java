@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/pessoaJuridica")
@@ -24,11 +24,11 @@ public class PessoaJuridicaController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> setPessoaJuridica(@RequestBody @Valid PessoaJuridicaDto pessoaJuridicaDto) throws Exception {
+    public ResponseEntity<Object> salvarPessoaJuridica(@RequestBody @Valid PessoaJuridicaDto pessoaJuridicaDto) throws Exception {
         var pessoaJuridicaModel = new PessoaJuridicaModel();
         BeanUtils.copyProperties(pessoaJuridicaDto, pessoaJuridicaModel);
         pessoaJuridicaService.setListaPessoasFisicaEJuridica(pessoaJuridicaModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pessoaJuridicaService.save(pessoaJuridicaModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(pessoaJuridicaService.salvarPessoaJuridica(pessoaJuridicaModel));
     }
 
     @GetMapping("/{id}")
@@ -38,5 +38,14 @@ public class PessoaJuridicaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(pessoaJuridicaModelOptional);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getListaPessoasJuridicas(){
+        List<PessoaJuridicaModel> listaPessoasJuridicas = pessoaJuridicaService.findAll();
+        if (listaPessoasJuridicas.isEmpty() || listaPessoasJuridicas == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(listaPessoasJuridicas);
     }
 }

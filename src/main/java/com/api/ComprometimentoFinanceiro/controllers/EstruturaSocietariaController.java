@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/estruturaSocietaria")
@@ -21,16 +21,29 @@ public class EstruturaSocietariaController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> setEstruturaSocietaria(@RequestBody @Valid EstruturaSocietariaDto estruturaSocietariaDto) throws Exception {
+    public ResponseEntity<Object> salvarEstruturaSocietaria(@RequestBody @Valid EstruturaSocietariaDto estruturaSocietariaDto) throws Exception {
         var estruturaSocietariaModel = new EstruturaSocietariaModel();
         BeanUtils.copyProperties(estruturaSocietariaDto, estruturaSocietariaModel);
         estruturaSocietariaService.setListaPessoasFisicaEJuridica(estruturaSocietariaModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(estruturaSocietariaService.save(estruturaSocietariaModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(estruturaSocietariaService.salvarEstruturaSocietaria(estruturaSocietariaModel));
     }
+
     @GetMapping("/{id}")
     public EstruturaSocietariaModel getEstruturaSocietaria(@PathVariable(value = "id") int id){
         EstruturaSocietariaModel es = estruturaSocietariaService.findById(id).get();
-        Double d = estruturaSocietariaService.comprometimentoFinanceiro(es);
         return es;
+    }
+
+    @GetMapping("/comprometimento-financeiro/{id}")
+    public Double getComprometimentoFinanceiro(@PathVariable(value = "id") int id){
+        EstruturaSocietariaModel es = estruturaSocietariaService.findById(id).get();
+        Double d = estruturaSocietariaService.comprometimentoFinanceiro(es);
+        return d;
+    }
+
+    @GetMapping
+    public List<EstruturaSocietariaModel> getEstruturaSocietaria(){
+        List<EstruturaSocietariaModel> listaEstruturasSocietarias = estruturaSocietariaService.findAll();
+        return listaEstruturasSocietarias;
     }
 }
